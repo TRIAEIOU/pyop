@@ -1,0 +1,4 @@
+!bin/user_files
+bin/user_files/*
+!bin/user_files/hello_world.py
+**/tmp

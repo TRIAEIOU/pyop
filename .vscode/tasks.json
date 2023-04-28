@@ -1,0 +1,64 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Build py",
+            "type": "shell",
+            "command": "Write-host Building py... ; rm ./bin/*.py; cp ./src/py/* ./bin",
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared",
+                "showReuseMessage": true,
+                "clear": false
+            }
+        },
+        {
+            "label": "Build config",
+            "type": "shell",
+            "command": "Write-host Building config... ; cp -force ./src/config/* ./bin",
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared",
+                "showReuseMessage": true,
+                "clear": false
+            }
+        },
+       {
+            "label": "Build update",
+            "type": "shell",
+            "command": "Write-host Building update... ; rm -r -force -erroraction ignore ./dist/*; cp -r -exclude meta.json ./bin, ./README.md, ./LICENSE, ./update ./dist/tmp; ls -r ./dist/tmp/__pycache__, ./dist/tmp/user_files -exclude hello_world.py | rm -r -force; ls ./dist/tmp | Compress-Archive -Force -DestinationPath ./dist/update.zip; pandoc -t ${env:CODEPATH}/pandoc/anki-addon.lua --abbreviations=${env:CODEPATH}/pandoc/empty -f markdown+link_attributes ./README.md -o ./dist/update.txt | Out-Null;",
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "dependsOn": [
+                "Build py",
+                "Build config"
+            ],
+            "presentation": {
+                "echo": false,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared",
+                "showReuseMessage": true,
+                "clear": false
+            }
+        },
+        {
+            "label": "Build all",
+            "dependsOn": [
+                "Build bin",
+                "Build update"
+            ]
+        }
+    ]
+}
